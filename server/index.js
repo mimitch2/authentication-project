@@ -10,7 +10,8 @@ const authenticationRoutes = require("./routes/AuthenticationRoutes");
 
 mongoose.set("debug", true);
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://jwoo:jwoo@ds147668.mlab.com:47668/aca-test");
+//notice you need to update this with your own database
+//mongoose.connect("mongodb://jwoo:jwoo@ds147668.mlab.com:47668/aca-test");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.get("/publicinformation", function (req, res) {
   res.send("Anyone can see this");
 });
 
+app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(userRoutes);
 app.use(sessionRoutes);
