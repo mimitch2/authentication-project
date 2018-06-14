@@ -11,28 +11,43 @@ const authenticationRoutes = require("./routes/AuthenticationRoutes");
 mongoose.set("debug", true);
 mongoose.Promise = global.Promise;
 //notice you need to update this with your own database
-//mongoose.connect("mongodb://jwoo:jwoo@ds147668.mlab.com:47668/aca-test");
 
-const app = express();
+mongoose.connect(process.env.mongodburi).then(
+  () => { 
+    console.log("mongoose connected successfully");
+   
+    startWebServer();
+  },
+  err => {
+    console.log("mongoose did not connect",err);
+   }
+);
 
-app.get("/publicinformation", function (req, res) {
-  res.send("Anyone can see this");
-});
 
-app.use(express.static("public"));
-app.use(bodyParser.json());
-app.use(userRoutes);
-app.use(sessionRoutes);
-app.use(authenticationRoutes);
 
-app.get("/canigetthis", function (req, res) {
-  res.send("You got the data. You are authenticated");
-});
-app.get("/secret", function (req, res) {
-  res.send(`The current user is ${req.user.username}`);
-});
+function startWebServer(){
 
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`Listening on port:${port}`);
-});
+  const app = express();
+
+  app.get("/publicinformation", function (req, res) {
+    res.send("Anyone can see this");
+  });
+
+  app.use(express.static("public"));
+  app.use(bodyParser.json());
+  app.use(userRoutes);
+  app.use(sessionRoutes);
+  app.use(authenticationRoutes);
+
+  app.get("/canigetthis", function (req, res) {
+    res.send("You got the data. You are authenticated");
+  });
+  app.get("/secret", function (req, res) {
+    res.send(`The current user is ${req.user.username}`);
+  });
+
+  const port = process.env.PORT || 3001;
+  app.listen(port, () => {
+    console.log(`Listening on port:${port}`);
+  });
+  }
