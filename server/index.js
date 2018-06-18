@@ -1,5 +1,6 @@
 // dotenv allows us to declare environment variables in a .env file, \
 // find out more here https://github.com/motdotla/dotenv
+const path = require('path');
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -29,7 +30,7 @@ function startWebServer(){
 
   const app = express();
 
-  app.get("/publicinformation", function (req, res) {
+  app.get("/api/publicinformation", function (req, res) {
     res.send("Anyone can see this");
   });
 
@@ -39,13 +40,19 @@ function startWebServer(){
   app.use(sessionRoutes);
   app.use(authenticationRoutes);
 
-  app.get("/canigetthis", function (req, res) {
+  app.get("/api/canigetthis", function (req, res) {
     res.send("You got the data. You are authenticated");
   });
-  app.get("/secret", function (req, res) {
+  app.get("/api/secret", function (req, res) {
     res.send(`The current user is ${req.user.username}`);
   });
 
+
+  app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+  });
+
+  //heroku injects the port number into the PORT env value
   const port = process.env.PORT || 3001;
   app.listen(port, () => {
     console.log(`Listening on port:${port}`);
