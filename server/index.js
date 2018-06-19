@@ -11,7 +11,9 @@ const authenticationRoutes = require("./routes/AuthenticationRoutes");
 
 mongoose.set("debug", true);
 mongoose.Promise = global.Promise;
+// mongoose.connect("mongodb://mimitch:Bladerunner80@ds159400.mlab.com:59400/authentication");
 //notice you need to update this with your own database
+
 
 mongoose.connect(process.env.mongodburi).then(
   () => { 
